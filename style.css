@@ -1,0 +1,35 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 10px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+h1 {
+    color: #0056b3;
+    font-size: 18px;
+}
+h2 {
+    font-size: 16px;
+    color: #666;
+}
+#tab-name {
+    color: #d35400;
+    font-weight: bold;
+}
+button {
+    background-color: #0084ff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 10px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+button:hover {
+    background-color: #0056b3;
+}
