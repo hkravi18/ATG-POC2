@@ -1,0 +1,13 @@
+{
+  "name": "Tab Title Extension",
+  "description": "An extension to print the title of the active chrome tab",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": [
+    "activeTab"
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "extension-icon.png"
+  }
+}
