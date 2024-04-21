@@ -10,7 +10,7 @@
     "lint:fix": "eslint . --report-unused-disable-directives --max-warnings 0 --fix",
     "format:write": "prettier --write \"./src/**/*.{ts,js}\"",
     "format:check": "prettier --check \"./src/**/*.{ts,js}\"",
-    "prepare": "husky",
+    "prepare": "cd .. && husky api/.husky",
     "migrate": "sequelize db:migrate --config=src/config/config.js",
     "migrate:undo": "sequelize db:migrate:undo --config=src/config/config.js",
     "create:migration": "sequelize migration:create --config=src/config/config.js --migrations-path=migrations --name"
