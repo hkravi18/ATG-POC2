@@ -1,6 +1,70 @@
-const { SERVER_URL, PAGE_LOAD_TIME } = require("./constants.js");
+const PORT = 4000;
+const PAGE_LOAD_TIME = 5000;
+
+//TODO: Change the local server url to deployed server url
+const SERVER_URL = `http://localhost:${PORT}`;
 
 console.log("LinkedIn Profiles Extension!");
+
+//function to scrape the content from linkedin profile
+const scrapeProfileData = () => {
+    const profileData = {
+        name: document.getElementsByTagName("h1")[0]?.innerText || "No Name Found",
+        location: document.querySelectorAll("span.text-body-small.inline.t-black--light.break-words")[0]?.innerText || "No Location Found",
+        about: document.getElementById("about")?.nextElementSibling?.nextElementSibling?.querySelectorAll("span")[0]?.innerText || "No About Found",
+
+        //linkedin do not have a bio field
+        bio: "No Bio Found",
+
+        //follower count of a linkedin user cannot be accessed
+        followerCount: 0,
+        connectionCount: parseInt(document.querySelectorAll("span.t-bold")[0]?.innerText?.split("+")[0]) || 0,
+    };
+
+    console.log("profileData: ", profileData); // For debugging
+    return profileData;
+}
+
+//function to send data to the server
+const postData = async (data, tabNum, baseAPIUrl) => {
+    try {
+        if (!data) {
+            console.error("No data provided to post details api");
+            return;
+        };
+
+        const response = await fetch(baseAPIUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const receivedData = await response.json();
+        if (receivedData.success) {
+            console.log("Data posted successfully");
+
+            tabNum++;
+            let numAssociater = "th";
+            if (tabNum === 1) {
+                numAssociater = "st";
+            } else if (tabNum === 2) {
+                numAssociater = "nd";
+            } else if (tabNum === 3) {
+                numAssociater = "rd";
+            } 
+
+            alert(`${tabNum + 1}${numAssociater} tab data posted successfully`);
+        } else {
+            console.log(err);
+            console.error(`Error while posting details: ${err.message}`);
+        };
+    } catch (err) {
+        console.log(err);
+        console.error(`Error while posting details: ${err.message}`);
+    };
+}
 
 //event listeners on open linkedin profile button
 document.addEventListener("DOMContentLoaded", function () {
@@ -42,70 +106,21 @@ document.addEventListener("DOMContentLoaded", function () {
         profileUrls.forEach(url => {
             chrome.tabs.create({ url: url, active: false }, function (tab) {
                 //wating for the page to reload
-                setTimeout(() => {
+                setTimeout(async () => {
                     chrome.scripting.executeScript({
                         target: { tabId: tab.id },
                         function: scrapeProfileData,
-                    }, (injectionResults) => {
+                    }, async (injectionResults) => {
                         const data = injectionResults[0].result;
 
                         //adding url to data 
                         data["url"] = url;
 
                         //sending data to server
-                        postData(tab.index, `${SERVER_URL}/api/profile`, data);
+                        await postData(data, tab.index, `${SERVER_URL}/api/profile`);
                     });
                 }, PAGE_LOAD_TIME);
             });
         });
     });
 });
-
-//function to scrape the content from linkedin profile
-const scrapeProfileData = () => {
-    const profileData = {
-        name: document.getElementsByTagName("h1")[0]?.innerText || "No Name Found",
-        location: document.querySelectorAll("span.text-body-small.inline.t-black--light.break-words")[0]?.innerText || "No Location Found",
-        about: document.getElementById("about")?.nextElementSibling?.nextElementSibling?.querySelectorAll("span")[0]?.innerText || "No About Found",
-
-        //linkedin do not have a bio field
-        bio: "No Bio Found",
-
-        //follower count of a linkedin user cannot be accessed
-        followerCount: 0,
-        connectionCount: parseInt(document.querySelectorAll("span.t-bold")[0]?.innerText?.split("+")[0]) || 0,
-    };
-
-    console.log("profileData: ", profileData); // For debugging
-    return profileData;
-}
-
-//function to send data to the server
-const postData = async (tabNum = 0, baseAPIUrl = "/", data = {}) => {
-    try {
-        if (!data) {
-            console.error("No data provided to post details api");
-            return;
-        };
-
-        const response = await fetch(baseAPIUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
-
-        const data = await response.json();
-        if (data.success) {
-            console.log("Data posted successfully");
-            alert(`${tabNum + 1} tab data posted successfully`);
-        } else {
-            console.log(err);
-            console.error(`Error while posting details: ${err.message}`);
-        };
-    } catch (err) {
-        console.log(err);
-        console.error(`Error while posting details: ${err.message}`);
-    };
-}
