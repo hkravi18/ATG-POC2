@@ -11,7 +11,7 @@ const scrapeProfileData = () => {
     const profileData = {
         name: document.getElementsByTagName("h1")[0]?.innerText || "No Name Found",
         location: document.querySelectorAll("span.text-body-small.inline.t-black--light.break-words")[0]?.innerText || "No Location Found",
-        about: document.getElementById("about")?.nextElementSibling?.nextElementSibling?.querySelectorAll("span")[0]?.innerText || "No About Found",
+        about: document.getElementById("about")?.nextElementSibling?.nextElementSibling?.querySelectorAll("span")[0]?.innerText || "No About Section Found",
 
         //linkedin do not have a bio field
         bio: "No Bio Found",
@@ -21,15 +21,14 @@ const scrapeProfileData = () => {
         connectionCount: parseInt(document.querySelectorAll("span.t-bold")[0]?.innerText?.split("+")[0]) || 0,
     };
 
-    console.log("profileData: ", profileData); // For debugging
     return profileData;
 }
 
 //function to send data to the server
-const postData = async (data, tabNum, baseAPIUrl) => {
+const postData = async (data, baseAPIUrl) => {
     try {
         if (!data) {
-            console.error("No data provided to post details api");
+            console.log("No data provided to post details api");
             return;
         };
 
@@ -44,25 +43,14 @@ const postData = async (data, tabNum, baseAPIUrl) => {
         const receivedData = await response.json();
         if (receivedData.success) {
             console.log("Data posted successfully");
-
-            tabNum++;
-            let numAssociater = "th";
-            if (tabNum === 1) {
-                numAssociater = "st";
-            } else if (tabNum === 2) {
-                numAssociater = "nd";
-            } else if (tabNum === 3) {
-                numAssociater = "rd";
-            } 
-
-            alert(`${tabNum + 1}${numAssociater} tab data posted successfully`);
+            alert(`Data for profile ${data.url} posted successfully`);
         } else {
-            console.log(err);
-            console.error(`Error while posting details: ${err.message}`);
+            console.log(`Error while posting details for ${data.url}: ${receivedData.error.message}`);
+            alert(`Error while posting details for ${data.url}: ${receivedData.error.message}`);
         };
     } catch (err) {
-        console.log(err);
-        console.error(`Error while posting details: ${err.message}`);
+        console.log(`Error while posting details for ${data.url}: ${err.message}`);
+        alert(`Error while posting details for ${data.url}: ${err.message}`);
     };
 }
 
@@ -117,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         data["url"] = url;
 
                         //sending data to server
-                        await postData(data, tab.index, `${SERVER_URL}/api/profile`);
+                        await postData(data, `${SERVER_URL}/api/profile`);
                     });
                 }, PAGE_LOAD_TIME);
             });

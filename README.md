@@ -110,6 +110,8 @@ This is an chrome extension project with backend build with ExpressJS/NodeJS and
    https://www.linkedin.com/in/.../, https://www.linkedin.com/in/.../, https://www.linkedin.com/in/.../
    ```
 
+5. Wait for few seconds so that the LinkedIn profile page loads, then it will show a pop with an appropriate message  
+
 ## Configuration
 
 - Create a `.env` file in the root directory of the project with the content mentioned in the **.env.example** file:
