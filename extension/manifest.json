@@ -1,13 +1,18 @@
 {
-  "name": "Tab Title Extension",
-  "description": "An extension to print the title of the active chrome tab",
+  "name": "LinkedIn Profile Extension",
+  "description": "An extension to open linkedin profiles in chrome tabs",
   "version": "1.0",
   "manifest_version": 3,
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.linkedin.com/*"
   ],
   "action": {
     "default_popup": "index.html",
-    "default_icon": "extension-icon.png"
+    "default_icon": "ext-icon.png"
   }
 }
