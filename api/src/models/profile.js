@@ -8,11 +8,26 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       url: DataTypes.STRING,
-      about: DataTypes.TEXT,
-      bio: DataTypes.TEXT,
-      location: DataTypes.STRING,
-      followerCount: DataTypes.INTEGER,
-      connectionCount: DataTypes.INTEGER,
+      about: {
+        type: DataTypes.TEXT,
+        defaultValue: "",
+      },
+      bio: {
+        type: DataTypes.TEXT,
+        defaultValue: "",
+      },
+      location: {
+        type: DataTypes.STRING,
+        defaultValue: "",
+      },
+      followerCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+      connectionCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
     },
     {
       sequelize,

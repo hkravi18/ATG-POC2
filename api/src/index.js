@@ -1,5 +1,5 @@
 require("dotenv").config({
-    path: `${__dirname}/../.env`,
+  path: `${__dirname}/../.env`,
 });
 
 //express app
@@ -15,7 +15,12 @@ const port = process.env.PORT || 4000;
 //db
 const establishConnection = require("./db/establishConnection.js");
 
+//routes
+const profileRoutes = require("./routes/profileRoutes.js");
+
 app.use(customLogger);
+
+app.use("/api/profile", profileRoutes);
 
 app.use(errorHandler);
 
@@ -32,7 +37,7 @@ establishConnection
     });
 
     app.listen(port, () => {
-      console.log(`Server listening on ${port}\n`);
+      console.log(`\nServer listening on ${port}\n`);
     });
   })
   .catch((err) => {

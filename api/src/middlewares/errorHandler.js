@@ -8,7 +8,9 @@ const errorHandler = (err, req, res, next) => {
   console.error(`ERROR (${err.source} | ${err.statusCode}): ${err.message}`);
 
   if (process.env.APP_ENV === "DEVELOPMENT") {
-    console.error(`ERROR STACK: ${err.stack}`);
+    console.error(
+      `\n------------------\nERROR STACK: ${err.stack}\n------------------\n`
+    );
   }
 
   return res.status(err.statusCode).json({

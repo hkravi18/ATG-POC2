@@ -1,33 +1,10 @@
-const handleValidation = ({
-  name,
-  url,
-  about,
-  bio,
-  location,
-  followerCount,
-  connectionCount,
-}) => {
+const handleValidation = ({ name, url }) => {
   let emptyField = "";
-  if (name === "") {
+  if (!name || name === "") {
     emptyField = "Name";
   }
-  if (url === "") {
+  if (!url || url === "") {
     emptyField = "URL";
-  }
-  if (about === "") {
-    emptyField = "About";
-  }
-  if (bio === "") {
-    emptyField = "Bio";
-  }
-  if (location === "") {
-    emptyField = "Location";
-  }
-  if (followerCount === "") {
-    emptyField = "Follower Count";
-  }
-  if (connectionCount === "") {
-    emptyField = "Connection Count";
   }
 
   if (emptyField !== "") {
@@ -36,6 +13,11 @@ const handleValidation = ({
       message: `${emptyField} cannot be empty`,
     };
   }
+
+  return {
+    valid: true,
+    message: "All fields are filled.",
+  };
 };
 
 module.exports = handleValidation;

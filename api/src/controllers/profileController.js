@@ -12,7 +12,11 @@ const postProfile = async (req, res, next) => {
     const { name, url, about, bio, location, followerCount, connectionCount } =
       req.body;
 
-    const validation = handleValidation(req.body);
+    const validation = handleValidation({
+      name: req.body?.name,
+      url: req.body?.url,
+    });
+
     if (!validation.valid) {
       const error = new CustomError(
         "Please fill all the fields",
@@ -35,6 +39,7 @@ const postProfile = async (req, res, next) => {
       followerCount,
       connectionCount,
     });
+
     res.status(200).send({
       success: true,
       data: {
