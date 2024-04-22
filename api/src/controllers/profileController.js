@@ -17,6 +17,25 @@ const postProfile = async (req, res, next) => {
       url: req.body?.url,
     });
 
+    const profileAlreadyExists = await Profile.findOne({
+      where: {
+        url,
+      },
+    });
+
+    if (profileAlreadyExists) {
+      const error = new CustomError(
+        "Profile already exists",
+        400,
+        "post-profile",
+        "Profile already exists",
+        "INVALID_REQUEST"
+      );
+      next(error);
+
+      return;
+    }
+
     if (!validation.valid) {
       const error = new CustomError(
         "Please fill all the fields",
